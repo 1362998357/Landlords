@@ -9,11 +9,19 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    card.cpp \
+    cardpanel.cpp \
+    cards.cpp \
     main.cpp \
-    gamepanel.cpp
+    gamepanel.cpp \
+    player.cpp
 
 HEADERS += \
-    gamepanel.h
+    card.h \
+    cardpanel.h \
+    cards.h \
+    gamepanel.h \
+    player.h
 
 FORMS += \
     gamepanel.ui
