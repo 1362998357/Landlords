@@ -5,8 +5,6 @@
 class Card
 {
 public:
-    Card();
-    //花色
     enum CardSuit{
         SuitBegin,
         Diamond, //方块
@@ -36,6 +34,10 @@ public:
         Card_BJ,
         PointEnd
     };
+
+    Card();
+    Card(CardPoint cp,CardSuit csuit);
+    //花
     void setPoint(CardPoint carP);
     void setSuit(CardSuit carS);
     //比较相等策略

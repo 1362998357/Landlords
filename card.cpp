@@ -21,6 +21,12 @@ Card::Card()
 
 }
 
+Card::Card(CardPoint cp, CardSuit csuit)
+{
+    setPoint(cp);
+    setSuit(csuit);
+}
+
 void Card::setPoint(CardPoint CardP)
 {
     Point = CardP;

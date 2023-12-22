@@ -19,6 +19,7 @@ public:
     };
     Cards();
     void add(Card&card);
+    void add(Card&&card);
     void add(Cards&cards);
     void remove(Card&card);
     void remove(Cards&cards);
@@ -41,6 +42,7 @@ public:
      Card randSendCard();
      //玩家的卡牌转换成有序的进行展示
      QList<Card> toSortList(sortType type = Cards::dec);
+     //hash表
     QSet<Card>cards;
 };
 #endif // CARDS_H
