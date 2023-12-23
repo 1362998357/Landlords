@@ -6,7 +6,7 @@ startButton::startButton(QWidget *parent)
 
 }
 
-void startButton::setImage(QString norml, QString press, QString entr)
+void startButton::setImage(QString norml, QString entr, QString press)
 {
     normlPicPath = norml;
     pressPicPath = press;
@@ -35,7 +35,7 @@ void startButton::mousePressEvent(QMouseEvent *ev)
 
 void startButton::mouseReleaseEvent(QMouseEvent *ev)
 {
-    if(ev->button() == Qt::RightButton)
+    if(ev->button() == Qt::LeftButton)
     {
         statrButPic.load(entrPicPath);
     }

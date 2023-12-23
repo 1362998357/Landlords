@@ -13,8 +13,8 @@ SOURCES += \
     card.cpp \
     cardpanel.cpp \
     cards.cpp \
+    client.cpp \
     gamecontrol.cpp \
-    main.cpp \
     gamepanel.cpp \
     player.cpp \
     robot.cpp \

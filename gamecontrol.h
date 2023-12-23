@@ -4,6 +4,9 @@
 #include <QObject>
 #include "robot.h"
 #include"userplayer.h"
+/*
+游戏控制类玩家的各种操作的实现
+*/
 class GameControl : public QObject
 {
     Q_OBJECT

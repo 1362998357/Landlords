@@ -13,7 +13,7 @@ class startButton : public QPushButton
     Q_OBJECT
 public:
     explicit startButton(QWidget *parent = nullptr);
-    void setImage(QString norml,QString press,QString entr);
+    void setImage(QString norml,QString entr,QString press);
 signals:
 protected:
     void enterEvent(QEnterEvent *ev);

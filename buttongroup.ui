@@ -32,7 +32,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="start_page">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -150,7 +150,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="JmpCard">
+        <widget class="startButton" name="JmpCard">
          <property name="text">
           <string>PushButton</string>
          </property>
@@ -187,7 +187,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="giveUp">
+        <widget class="startButton" name="giveUp">
          <property name="text">
           <string>PushButton</string>
          </property>
