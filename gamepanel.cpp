@@ -231,7 +231,104 @@ void GamePanel::startDispatchCard()
     m_timer->start(10);
         //播放背景音乐
 }
+void GamePanel::disposeCard(Player *player, const Cards &cards)
+{
+    Cards& myCard = const_cast<Cards&>(cards);
+    //将扑克牌转化为降序排列
+    QCardList list = myCard.toSortList();
+    for(int i=0; i<list.size(); ++i)
+    {
+        CardPanel* panel = CardPenalMap[list.at(i)];
+        panel->setOwner(player);
+    }
+    // 更新扑克牌在窗口中的显示
+    updatePlayerCards(player);
+}
+void GamePanel::updatePlayerCards(Player *player)
+{
+    Cards cards = player->getCards();
+    QCardList list = cards.toSortList();
 
+    m_cardsRect = QRect();
+    m_userCards.clear();
+    // 取出展示扑克牌的区域
+    int cardSpace = 20;
+    QRect cardsRect = m_contextMap[player].cardRect;
+    for(int i=0; i<list.size(); ++i)
+    {
+        CardPanel* panel = CardPenalMap[list.at(i)];
+        panel->show();
+        panel->raise();
+        panel->setShowFront(m_contextMap[player].isFrontSide);
+
+        // 水平 or 垂直显示
+        if(m_contextMap[player].align == Horizontal)
+        {
+            //获得存放区域和卡牌存放位置的间隙
+            int leftX = cardsRect.left() + (cardsRect.width() - (list.size() - 1) * cardSpace - panel->width()) / 2;
+            int topY = cardsRect.top() + (cardsRect.height() - gc->m_cardSize.height()) / 2;
+            //选中弹出
+            if(panel->isSelected())
+            {
+                topY -= 10;
+            }
+            //卡牌层叠移动
+            panel->move(leftX + cardSpace * i, topY);
+            m_cardsRect = QRect(leftX, topY,cardSpace * i + gc->m_cardSize.width(), gc->m_cardSize.height());
+            int curWidth = 0;
+            //最后一张卡牌全部展示
+            if(list.size() - 1 == i)
+            {
+                curWidth = gc->m_cardSize.width();
+            }
+            else
+            {
+                curWidth = cardSpace;
+            }
+            QRect cardRect(leftX + cardSpace * i, topY, curWidth, gc->m_cardSize.height());
+            //插入到用户手里卡牌面板map中，方便后续使用
+            m_userCards.insert(panel, cardRect);
+        }
+        else
+        {
+            int leftX = cardsRect.left() + (cardsRect.width() - gc->m_cardSize.width()) / 2;
+            int topY = cardsRect.top() + (cardsRect.height() - (list.size() - 1) * cardSpace - panel->height()) / 2;
+            panel->move(leftX, topY + i * cardSpace);
+        }
+    }
+
+//    // 显示玩家打出的牌
+//    // 得到当前玩家的出牌区域以及本轮打出的牌
+//    QRect playCardRect = m_contextMap[player].playHandRect;
+//    Cards lastCards = m_contextMap[player].lastCards;
+//    if(!lastCards.isEmpty())
+//    {
+//        int playSpacing = 24;
+//        CardList lastCardList = lastCards.toCardList();
+//        CardList::ConstIterator itplayed = lastCardList.constBegin();
+//        for(int i=0; itplayed != lastCardList.constEnd(); ++itplayed, i++)
+//        {
+//            CardPanel* panel = m_cardMap[*itplayed];
+//            panel->setFrontSide(true);
+//            panel->raise();
+//            // 将打出的牌移动到出牌区域
+//            if(m_contextMap[player].align == Horizontal)
+//            {
+//                int leftBase = playCardRect.left() +
+//                               (playCardRect.width() - (lastCardList.size() - 1) * playSpacing - panel->width()) / 2;
+//                int top = playCardRect.top() + (playCardRect.height() - panel->height()) /2 ;
+//                panel->move(leftBase + i * playSpacing, top);
+//            }
+//            else
+//            {
+//                int left = playCardRect.left() + (playCardRect.width() - panel->width()) / 2;
+//                int top = playCardRect.top() ;
+//                panel->move(left, top + i * playSpacing);
+//            }
+//            panel->show();
+//        }
+//    }
+}
 void GamePanel::onDispatchCard()
 {
     //
@@ -241,6 +338,8 @@ void GamePanel::onDispatchCard()
     {
         Card card=gc->takeOneCard();
         curPlayer->storeCard(card);
+        Cards cs(card);
+        disposeCard(curPlayer, cs);
         //切换当前玩家
         gc->setCurrentPlayer(curPlayer->getNextPlayer());
         currMovePos =0;
@@ -251,6 +350,9 @@ void GamePanel::onDispatchCard()
         {
             //终止定时器
             m_timer->stop();
+            //移动牌和中央底牌都隐藏才行
+            m_baseCard->hide();
+            m_moveCard->hide();
             //切换游戏状态到叫地主状态
             gameStatusPrecess(GameControl::callLords);
             //关闭音乐

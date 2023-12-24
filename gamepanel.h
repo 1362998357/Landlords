@@ -50,6 +50,10 @@ public:
     //发牌时移动一步处理函数
     void cardMoveStep(Player *, int);
 
+    //显示扑克牌到扑克牌显示区域
+    void disposeCard(Player *player, const Cards &cards);
+    // 更新扑克牌在窗口中的显示
+    void updatePlayerCards(Player *player);
 protected:
     void paintEvent(QPaintEvent* ev);
     void mouseMoveEvent(QMouseEvent* ev);
@@ -86,6 +90,7 @@ private:
     CardPanel* m_moveCard;
     //最后3张底牌
     QVector<CardPanel*> m_last3Card;
+    //
     //发牌区位置
     QPoint m_baseCardPos;
     //游戏状态
@@ -97,5 +102,8 @@ private:
     QTimer* m_timer;
     //发牌音乐
     //BGMControl* m_bgm;
+    QRect m_cardsRect;
+    //用户玩家的卡牌手里的牌方便使用
+    QHash<CardPanel*, QRect> m_userCards;
 };
 #endif // GAMEPANEL_H

@@ -8,6 +8,7 @@
 //玩家的卡牌存放地
 //可以存储每个玩家手里的扑克牌
 //也可以存储整副扑克牌
+using QCardList = QList<Card>;
 class Cards
 {
 public:
@@ -18,6 +19,7 @@ public:
         dec
     };
     Cards();
+    Cards(Card&card);
     void add(Card&card);
     void add(Card&&card);
     void add(Cards&cards);
@@ -41,7 +43,7 @@ public:
      //随机取出一张扑克牌
      Card randSendCard();
      //玩家的卡牌转换成有序的进行展示
-     QList<Card> toSortList(sortType type = Cards::dec);
+    QCardList  toSortList(sortType type = Cards::dec);
      //hash表
     QSet<Card>cards;
 };
