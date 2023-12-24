@@ -44,7 +44,17 @@ bool Card::operator ==(const Card &card) const
         return true;
     return false;
 }
-
+bool Card::operator < (const Card &card) const
+{
+    if(Point == card.Point)
+    {
+        return Suit < card.Suit;
+    }
+    else
+    {
+        return Point < card.Point;
+    }
+}
 size_t qHash(const Card &card)
 {
     return card.Point*100+card.Suit;

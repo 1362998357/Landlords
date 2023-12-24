@@ -8,6 +8,13 @@ scorePanel::scorePanel(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void scorePanel::setScores(int left, int right, int user)
+{
+    ui->lefttRobotScore->setText(QString::number(left));
+    ui->rightRobotScore->setText(QString::number(right));
+    ui->userScore->setText(QString::number(user));
+}
+
 scorePanel::~scorePanel()
 {
     delete ui;

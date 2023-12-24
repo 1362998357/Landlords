@@ -32,7 +32,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="user">
+    <widget class="QLabel" name="userScore">
      <property name="font">
       <font>
        <family>微软雅黑</family>
@@ -83,7 +83,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QLabel" name="lefttRobot">
+    <widget class="QLabel" name="lefttRobotScore">
      <property name="font">
       <font>
        <family>微软雅黑</family>
@@ -134,7 +134,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLabel" name="rightRobot_2">
+    <widget class="QLabel" name="rightRobotScore">
      <property name="font">
       <font>
        <family>微软雅黑</family>

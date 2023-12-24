@@ -3,10 +3,11 @@
 Player::Player(QObject *parent)
     : QObject{parent}
 {
-
+    score = 0;
+    isWin = false;
 }
 
-Player::Player(QString name, QObject *parent)
+Player::Player(QString name, QObject *parent):Player(parent)
 {
     this->name = name;
 }

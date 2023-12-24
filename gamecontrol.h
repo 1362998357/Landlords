@@ -2,8 +2,11 @@
 #define GAMECONTROL_H
 
 #include <QObject>
+#include <QSize>
+#include <QPixmap>
 #include "robot.h"
 #include"userplayer.h"
+#include"cardpanel.h"
 /*
 游戏控制类玩家的各种操作的实现
 */
@@ -44,28 +47,40 @@ public:
     //得到出牌玩家打出的牌
     Cards getSendHandCards();
     //随机发一张牌给玩家
-    void takeOneCard();
+    Card takeOneCard();
     //获取最后的3张底牌
     Cards getSurplusThreeCards();
     //初始化卡牌
     void initCards();
-    //重新洗牌
+    //重新清空数据/开始洗牌
     void resetCardDate();
     //开始叫地主
     void statrCallLord();
     void becomeLord(Player*player);
     void clearScore();
+    // 处理玩家选牌
+    void onCardSelected(Qt::MouseButton button);
+    // 处理用户玩家出牌
+    void onUserPlayHand();
+    void clearPlayerScore();
+    // 裁剪图片
+    void cropImage(QPixmap& pix, CardPanel*panel,int x, int y, Card& c);
 
 private:
-    Robot*leftRobot;
-    Robot*rightRobot;
-    UserPlayer*userPlayer;
+    Robot*leftRobot = nullptr;
+    Robot*rightRobot = nullptr;
+    UserPlayer*userPlayer= nullptr;
     //当前玩家
-    Player*currentPlayer;
+    Player*currentPlayer = nullptr;
     //出牌玩家
-    Player*sendHandPlayer;
+    Player*sendHandPlayer = nullptr;
     Cards sendHandPlayerCards;
     Cards allCards;
+public:
+    //卡牌大小
+    QSize m_cardSize;
+    //卡牌的图片
+    QPixmap m_cardBackImg;
 signals:
 
 };

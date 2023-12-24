@@ -3,7 +3,8 @@
 CardPanel::CardPanel(QWidget *parent)
     : QWidget{parent}
 {
-    isFront = true;
+    isFront = false;
+
 }
 
 void CardPanel::setImage(QPixmap frontImage, QPixmap backImage)
@@ -31,8 +32,6 @@ void CardPanel::paintEvent(QPaintEvent *event)
     {
         painter.drawPixmap(rect(),back);
     }
-    painter.drawText(rect(), Qt::AlignCenter, "Qt");
-
 }
 
 void CardPanel::mousPressEvernt(QMouseEvent *event)

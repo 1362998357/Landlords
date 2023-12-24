@@ -40,10 +40,12 @@ public:
     //花
     void setPoint(CardPoint carP);
     void setSuit(CardSuit carS);
-    //比较相等策略
+    //比较相等策略 给qset qhash 准备的
     bool operator == (const Card&card)const;
     CardPoint Point;
     CardSuit Suit;
+    //给Qmap准备的
+    bool operator <(const Card &card) const;
 };
 //排序策略函数
 bool lessFunc(Card &c1,Card &c2);

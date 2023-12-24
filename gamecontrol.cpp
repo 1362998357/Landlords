@@ -38,6 +38,21 @@ void GameControl::playerInint()
     currentPlayer = userPlayer;
 }
 
+Robot *GameControl::getLeftRobt()
+{
+    return leftRobot;
+}
+
+Robot *GameControl::getRightRobt()
+{
+    return rightRobot;
+}
+
+UserPlayer *GameControl::getUserPlayer()
+{
+    return userPlayer;
+}
+
 void GameControl::setCurrentPlayer(Player *player)
 {
     currentPlayer = player;
@@ -53,9 +68,9 @@ Cards GameControl::getSendHandCards()
     return sendHandPlayerCards;
 }
 
-void GameControl::takeOneCard()
+Card GameControl::takeOneCard()
 {
-    allCards.randSendCard();
+    return allCards.randSendCard();
 }
 
 Cards GameControl::getSurplusThreeCards()
@@ -112,4 +127,17 @@ void GameControl::clearScore()
     userPlayer->setScore(0);
     leftRobot->setScore(0);
     rightRobot->setScore(0);
+}
+
+void GameControl::clearPlayerScore()
+{
+
+}
+
+void GameControl::cropImage(QPixmap &pix, CardPanel*panel,int x, int y, Card &c)
+{
+    QPixmap sub = pix.copy(x, y, m_cardSize.width(), m_cardSize.height());
+    panel->setImage(sub, m_cardBackImg);
+    panel->setCard(c);
+    panel->hide();
 }
