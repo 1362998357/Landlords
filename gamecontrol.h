@@ -10,6 +10,26 @@
 /*
 游戏控制类玩家的各种操作的实现
 */
+
+//记录玩家下注信息类
+struct BetRecord
+{
+    BetRecord()
+    {
+        reset();
+    }
+    //清空玩家下注信息
+    void reset()
+    {
+        player = nullptr;
+        bet = 0;
+        times = 0;
+    }
+    Player* player;//下注的玩家
+    int bet;//下注的分数
+    int times;  // 第几次叫地主
+};
+
 class GameControl : public QObject
 {
     Q_OBJECT
@@ -56,15 +76,24 @@ public:
     void resetCardDate();
     //开始叫地主
     void statrCallLord();
-    void becomeLord(Player*player);
+    //成为地主
+    void becomeLord(Player*player,int &bet);
     void clearScore();
+    // 处理叫地主
+    void onGrabBet(Player* player, int bet);
     // 处理玩家选牌
     void onCardSelected(Qt::MouseButton button);
     // 处理用户玩家出牌
     void onUserPlayHand();
+    // 处理出牌
+    void onPlayHand(Player *player, const Cards &card);
+    //清空玩家分数
     void clearPlayerScore();
     // 裁剪图片
     void cropImage(QPixmap& pix, CardPanel*panel,int x, int y, Card& c);
+    //获得最大的下注分数
+    int getPlayerMaxBet();
+
 
 private:
     Robot*leftRobot = nullptr;
@@ -74,15 +103,28 @@ private:
     Player*currentPlayer = nullptr;
     //出牌玩家
     Player*sendHandPlayer = nullptr;
+    //发出的牌
     Cards sendHandPlayerCards;
+    //所有的牌
     Cards allCards;
+    //存储玩家下注信息类
+    BetRecord m_betRecord;
+    int m_curBet = 0;
 public:
     //卡牌大小
     QSize m_cardSize;
     //卡牌的图片
     QPixmap m_cardBackImg;
 signals:
-
+    void playerStatusChanged(Player* player, PlayStatus status);
+    // 通知玩家抢地主了
+    void notifyGrabLordBet(Player* player, int bet, bool flag);
+    // 游戏状态变化
+    void gameStatusChanged(GameStatus status);
+    // 通知玩家出牌了
+    void notifyPlayHand(Player* player, const Cards& card);
+    // 给玩家传递出牌数据
+    void pendingInfo(Player* player, const Cards& card);
 };
 
 #endif // GAMECONTROL_H

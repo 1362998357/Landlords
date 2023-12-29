@@ -129,7 +129,7 @@ Player *Player::getNextPlayer()
 
 void Player::grabLordBet(int point)
 {
-
+        emit notifyGrabLordBet(this, point);
 }
 
 void Player::storeSendCardsInfor(Cards cards, Player *player)

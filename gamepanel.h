@@ -49,11 +49,16 @@ public:
     void onDispatchCard();
     //发牌时移动一步处理函数
     void cardMoveStep(Player *, int);
-
     //显示扑克牌到扑克牌显示区域
     void disposeCard(Player *player, const Cards &cards);
     // 更新扑克牌在窗口中的显示
     void updatePlayerCards(Player *player);
+    // 处理玩家状态的变化
+    void onPlayerStatusChanged(Player* player, GameControl::PlayStatus status);
+    //更新下注时要显示的提示信息
+    void onGrabLordBet(Player*,int, bool);
+    //展示动画
+    void showAnimation(AnimationType type, int bet);
 protected:
     void paintEvent(QPaintEvent* ev);
     void mouseMoveEvent(QMouseEvent* ev);
@@ -80,7 +85,7 @@ private:
     QPixmap m_bkImage;
     //玩家容器
     QList<Player*> PlayerList;
-    //晚间游戏中上下文容器
+    //玩家游戏中上下文容器
     QMap<Player*, PlayerContext> m_contextMap;
     //每张卡牌面板map
     QMap<Card,CardPanel*> CardPenalMap;

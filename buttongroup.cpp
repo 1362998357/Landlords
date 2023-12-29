@@ -65,12 +65,12 @@ void ButtonGroup::selectPanel(Panel type, int bet)
 {
     // enum Panel{Start, PlayCard, PassOrPlay, CallLord, Empty};
     ui->stackedWidget->setCurrentIndex(type);
-    //不是叫地主只选择页面不用下注
+    //o不是叫地主只选择页面不用下注
     if(type != CallLord)
     {
         return;
     }
-    if(bet == 0)
+    if(bet == 0)//下注分数为0全部显示
     {
         ui->scoreOne->setVisible(true);
         ui->scoreTwo->setVisible(true);

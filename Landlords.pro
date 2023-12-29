@@ -17,6 +17,7 @@ SOURCES += \
     gamecontrol.cpp \
     gamepanel.cpp \
     player.cpp \
+    playhand.cpp \
     robot.cpp \
     scorepanel.cpp \
     startbutton.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     gamecontrol.h \
     gamepanel.h \
     player.h \
+    playhand.h \
     robot.h \
     scorepanel.h \
     startbutton.h \
