@@ -22,17 +22,19 @@ public:
     Cards(Card&card);
     void add(Card&card);
     void add(Card&&card);
-    void add(Cards&cards);
+    void add(const Cards&cards);
+    void add(const QVector<Cards>& cards);
+
     void remove(Card&card);
-    void remove(Cards&cards);
+    void remove(const Cards &cards);
     int count();
     void clear();
     bool isContains(Card&card);
     bool isContains(Cards &cards);
     bool isEmpty();
     Cards&operator<<(Card& card);
-    Cards&operator<<(Cards& cards);
-
+    Cards&operator<<(Cards cards);
+    void remove(const QVector<Cards>& cards);
     //最小点数
      Card::CardPoint getMinPoint();
     //最大点数

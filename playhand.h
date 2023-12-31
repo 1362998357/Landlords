@@ -5,7 +5,10 @@
 #include "card.h"
 #include "cards.h"
 
-
+/*
+处理出牌的组合
+判断出牌的类型
+*/
 
 class PlayHand
 {
@@ -52,7 +55,7 @@ public:
     Card::CardPoint getCardPoint();
     int getExtra();
 
-    // 比较自己的牌和其他人的牌的大小
+    // 比较自己的牌和其他人的牌的大小 beat 战胜
     bool canBeat(const PlayHand& other);
 
 private:
@@ -83,13 +86,13 @@ private:
     bool isBombJokersTwoSingle();   // 王炸带两单
 
 private:
-    HandType m_type;
-    Card::CardPoint m_pt;
-    int m_extra;
-    QVector<Card::CardPoint> m_oneCard;
-    QVector<Card::CardPoint> m_twoCard;
-    QVector<Card::CardPoint> m_threeCard;
-    QVector<Card::CardPoint> m_fourCard;
+    HandType m_type;//出牌类型
+    Card::CardPoint m_pt;//牌的点数，如果是飞机带一对等 记录最小点数
+    int m_extra;//双方打出牌的数量
+    QVector<Card::CardPoint> m_oneCard;//存放有1张相同的牌
+    QVector<Card::CardPoint> m_twoCard;//存放有2张x相同的牌
+    QVector<Card::CardPoint> m_threeCard;//存放有3张相同的牌
+    QVector<Card::CardPoint> m_fourCard; //存放有4张相同的牌 的点数
 };
 
 #endif // PLAYHAND_H

@@ -21,6 +21,7 @@ SOURCES += \
     robot.cpp \
     scorepanel.cpp \
     startbutton.cpp \
+    strategy.cpp \
     userplayer.cpp
 
 HEADERS += \
@@ -35,6 +36,7 @@ HEADERS += \
     robot.h \
     scorepanel.h \
     startbutton.h \
+    strategy.h \
     userplayer.h
 
 FORMS += \

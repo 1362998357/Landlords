@@ -57,6 +57,7 @@ public:
 
     //记录用户刚打出的牌，其他人要根据这个牌进行选择出牌
     void storeSendCardsInfor(Cards cards,Player *player);
+    //    // 获取待出牌玩家对象以及这个玩家打出的牌
     Cards getJustSendCards();
     Player* getJustSendPlayer();
     //准备叫地主
