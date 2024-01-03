@@ -33,7 +33,7 @@ public:
     void setScore(int score);
     int getScore();
     //判断是否已经赢了
-    void setIswin(bool isWin);
+    void setWin(bool isWin);
     bool getIsWin();
 
     //存储手里的牌
@@ -56,15 +56,20 @@ public:
     void grabLordBet(int point);
 
     //记录用户刚打出的牌，其他人要根据这个牌进行选择出牌
-    void storeSendCardsInfor(Cards cards,Player *player);
+    void storeSendCardsInfor(Player* player, const Cards& card);
     //    // 获取待出牌玩家对象以及这个玩家打出的牌
     Cards getJustSendCards();
     Player* getJustSendPlayer();
     //准备叫地主
-    virtual void prepareCallLord();
+    virtual void prepareCallLord()=0;
     //准备出牌
     virtual void prepareSendCards();
 
+    //考虑叫地主
+    virtual void thinkCallLords();
+
+    //考虑出牌
+    virtual void thinkPlayHand();
 protected:
     QString name;
     Derict derict;
@@ -88,7 +93,7 @@ signals:
     // 通知已经叫地主下注
     void notifyGrabLordBet(Player* player, int bet);
     // 通知已经出牌
-    void notifyPlayHand(Player* player, const Cards& card);
+    void notifyPlayHand(Player* player, const Cards& cards);
     // 通知已经发牌了
     void notifyPickCards(Player* player, const Cards& cards);
 };

@@ -2,6 +2,7 @@
 #define GAMEPANEL_H
 
 #include <QMainWindow>
+#include "animationwindow.h"
 #include <QLabel>
 #include "card.h"
 #include <QTimer>
@@ -37,8 +38,7 @@ public:
     void initButtonsGroup();
     //倒计时窗口初始化
     void initTimeEndCount();
-    // 处理玩家选牌
-    void onCardSelected(Qt::MouseButton button);
+    void onCardSelected(Qt::MouseButton button);   // 处理玩家选牌槽函数
     // 处理用户玩家出牌
     void onUserPass();
     // 处理用户玩家出牌
@@ -58,12 +58,19 @@ public:
     //更新下注时要显示的提示信息
     void onGrabLordBet(Player*,int, bool);
     //展示动画
-    void showAnimation(AnimationType type, int bet);
+    void showAnimation(AnimationType type, int bet= 0);
+    // 处理玩家的出牌
+    void onDisposePlayHand(Player* player, const Cards& cards);
+    // 隐藏玩家打出的牌
+    void hidePlayerDropCards(Player* player);
+    //加载玩家头像 转换成pixmap的形式
+    QPixmap loadRoleImage(Player::Sex sex, Player::Derict direct, Player::Role role);
 protected:
     void paintEvent(QPaintEvent* ev);
     void mouseMoveEvent(QMouseEvent* ev);
 private:
     enum CardAlign{Horizontal, Vertical};
+    //玩家上下文信息结构体
     struct PlayerContext
     {
         // 1. 玩家扑克牌显示的区域
@@ -110,5 +117,10 @@ private:
     QRect m_cardsRect;
     //用户玩家的卡牌手里的牌方便使用
     QHash<CardPanel*, QRect> m_userCards;
+    //显示的动画类
+    AnimationWindow *m_animation;
+    //保存被选中的卡片
+    CardPanel* m_curSelCard;
+    QSet<CardPanel*> m_selectCards;
 };
 #endif // GAMEPANEL_H

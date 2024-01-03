@@ -5,6 +5,7 @@ UserPlayer::UserPlayer(QString name, QObject *parent)
 {
     this->name = name;
     typed = user;
+    this->justSeCaPlayer =nullptr;
 }
 
 void UserPlayer::prepareCallLord()

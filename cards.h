@@ -27,11 +27,11 @@ public:
 
     void remove(Card&card);
     void remove(const Cards &cards);
-    int count();
+    int count() const;
     void clear();
     bool isContains(Card&card);
     bool isContains(Cards &cards);
-    bool isEmpty();
+    bool isEmpty() const;
     Cards&operator<<(Card& card);
     Cards&operator<<(Cards cards);
     void remove(const QVector<Cards>& cards);

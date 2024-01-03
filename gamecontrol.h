@@ -66,6 +66,8 @@ public:
     Player*getCurrentPlayer();
     //得到出牌玩家打出的牌
     Cards getSendHandCards();
+    //得到出牌玩家
+    Player* getPendPlayer();
     //随机发一张牌给玩家
     Card takeOneCard();
     //获取最后的3张底牌
@@ -86,7 +88,7 @@ public:
     // 处理用户玩家出牌
     void onUserPlayHand();
     // 处理出牌
-    void onPlayHand(Player *player, const Cards &card);
+    void onPlayHand(Player *player, const  Cards &card);
     //清空玩家分数
     void clearPlayerScore();
     // 裁剪图片
@@ -109,7 +111,12 @@ private:
     Cards allCards;
     //存储玩家下注信息类
     BetRecord m_betRecord;
+    //玩家当前的分数
     int m_curBet = 0;
+    //出牌玩家
+    //出牌玩家出的牌
+    //Player* m_pendPlayer = nullptr;
+    //Cards m_pendCards;
 public:
     //卡牌大小
     QSize m_cardSize;

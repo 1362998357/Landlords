@@ -1,5 +1,5 @@
 #include "player.h"
-
+#include <QDebug>
 Player::Player(QObject *parent)
     : QObject{parent}
 {
@@ -10,6 +10,7 @@ Player::Player(QObject *parent)
 Player::Player(QString name, QObject *parent):Player(parent)
 {
     this->name = name;
+    this->justSeCaPlayer =nullptr;
 }
 
 void Player::setName(QString name)
@@ -72,7 +73,7 @@ int Player::getScore()
     return score;
 }
 
-void Player::setIswin(bool isWin)
+void Player::setWin(bool isWin)
 {
     this->isWin = isWin;
 }
@@ -85,11 +86,16 @@ bool Player::getIsWin()
 void Player::storeCard(Card &card)
 {
     myCards.add(card);
+    Cards cs;
+    cs.add(card);
+    emit notifyPickCards(this, cs);
 }
 
 void Player::storeCards(Cards &cards)
 {
     myCards.add(cards);
+    //通知面板保存了3张底牌 保证面板将3张底牌及时更新卡牌的所有者
+    emit notifyPickCards(this, cards);
 }
 
 Cards Player::getCards()
@@ -105,6 +111,8 @@ void Player::clearMyCards()
 void Player::playerOutCard(Cards &cards)
 {
     myCards.remove(cards);
+    //通知已经出牌出牌
+    emit notifyPlayHand(this, cards);
 }
 
 void Player::setPrePlayer(Player *player)
@@ -132,8 +140,11 @@ void Player::grabLordBet(int point)
         emit notifyGrabLordBet(this, point);
 }
 
-void Player::storeSendCardsInfor(Cards cards, Player *player)
+void Player::storeSendCardsInfor(Player* player, const Cards& cards)
 {
+        qDebug()<<"player store name"<<getName()<<"----------------";
+        qDebug()<<"player store name"<<player->getName()<<"----------------";
+        qDebug()<<"player store card "<<cards.count()<<"----------------";
     justSendCards = cards;
     justSeCaPlayer = player;
 }
@@ -154,6 +165,16 @@ void Player::prepareCallLord()
 }
 
 void Player::prepareSendCards()
+{
+
+}
+
+void Player::thinkCallLords()
+{
+    qDebug()<<"Player thinkCallLord";
+}
+
+void Player::thinkPlayHand()
 {
 
 }

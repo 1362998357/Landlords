@@ -1,7 +1,8 @@
 #include "cardpanel.h"
+#include <QMouseEvent>
 
 CardPanel::CardPanel(QWidget *parent)
-    : QWidget{parent}
+    : QWidget(parent)
 {
     isFront = false;
 
@@ -34,9 +35,14 @@ void CardPanel::paintEvent(QPaintEvent *event)
     }
 }
 
-void CardPanel::mousPressEvernt(QMouseEvent *event)
+void CardPanel::clicked()
 {
-
+    emit cardSelected(Qt::LeftButton);
+}
+void CardPanel::mousePressEvent(QMouseEvent *event)
+{
+    qDebug()<<"mouse panel woner "<<this->getCard().Point;
+    emit cardSelected(event->button());
 }
 
 void CardPanel::setShowFront(bool flage)

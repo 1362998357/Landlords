@@ -41,6 +41,7 @@ void ButtonGroup::initButtons()
             {
                 emit betPoint(0);
             });
+    //给每个下注分数的单击事件设置槽函数
     connect(ui->scoreOne, &startButton::clicked, this, [=]()
             {
                 emit betPoint(1);

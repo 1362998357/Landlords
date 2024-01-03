@@ -17,7 +17,8 @@ public:
     void setShowFront(bool flage);
     //返回扑克牌是否是正面
     bool isShowFront();
-
+//    模拟单击信号
+    void clicked();
     //设置是否被选中
     void setSeleted(bool flage);
     bool isSelected();
@@ -33,7 +34,10 @@ public:
 
     //事件处理函数
     void paintEvent(QPaintEvent*event);
-    void mousPressEvernt(QMouseEvent *event);
+      //卡片选中事件传参来gamepenal确定左键右键
+    void mousePressEvent(QMouseEvent *event);
+signals:
+    void cardSelected(Qt::MouseButton button);
 private:
     QPixmap front;
     QPixmap back;

@@ -1,6 +1,7 @@
 #include "strategy.h"
 #include <QMap>
 #include <functional>
+#include<QDebug>
 
 Strategy::Strategy(Player *player, const Cards &cards):
     m_player(player),
@@ -10,19 +11,25 @@ Strategy::Strategy(Player *player, const Cards &cards):
 
 Cards Strategy::makeStrategy()
 {
+    qDebug()<<"机器人进入出牌----------------------------------strtategy makeStrategy-14";
     // 得到出牌玩家对象以及打出的牌
     Player* pendPlayer = m_player->getJustSendPlayer();
+    if(pendPlayer == nullptr) qDebug()<<"true-------------------";
+    qDebug()<<"机器人进入出牌----------------------------------strtategy makeStrategy-18";
     Cards pendCards = m_player->getJustSendCards();
 
     // 判断上次出牌的玩家是不是我自己
     if(pendPlayer == m_player || pendPlayer == nullptr)
     {
+        qDebug()<<"机器人第一次出牌----------------------------------";
+        //qDebug()<<pendPlayer->getName()<<"-----------------------strtategy makeStrategy-29";
         // 直接出牌
         // 如果是我自己, 出牌没有限制
         return firstPlay();
     }
     else
     {
+    qDebug()<<pendPlayer->getName()<<"-----------------------strtategy makeStrategy-29";
         // 如果不是我自己需要找比出牌玩家点数大的牌
         PlayHand type(pendCards);
         Cards beatCards = getGreaterCards(type);
@@ -42,10 +49,12 @@ Cards Strategy::makeStrategy()
 
 Cards Strategy::firstPlay()
 {
+    qDebug()<<"firstPlay start------------------------- startegy firstPlay 52";
     // 判断玩家手中是否只剩单一的牌型
     PlayHand hand(m_cards);
     if(hand.getHandType() != PlayHand::Hand_Unknown)
     {
+        qDebug()<<"firstPlay end------------------------- startegy firstPlay 57";
         return m_cards;
     }
     // 不是单一牌型
@@ -62,10 +71,12 @@ Cards Strategy::firstPlay()
         //如果打出顺子后，单牌的数量变少了说明是合理的
         if(baseNum > lastNum)
         {
+            qDebug()<<"firstPlay end------------------------- startegy firstPlay 73";
             return optimalSeq[0];
         }
     }
 
+    //找连对子，要删除所有的能复合对子的牌
     bool hasPlane, hasTriple, hasPair;
     hasPair = hasTriple = hasPlane = false;
     Cards backup = m_cards;
@@ -101,6 +112,7 @@ Cards Strategy::firstPlay()
     if(hasPair)
     {
         Cards maxPair;
+        //找最长的连对 拿出去
         for(int i=0; i<seqPairArray.size(); ++i)
         {
             if(seqPairArray[i].count() > maxPair.count())
@@ -108,6 +120,7 @@ Cards Strategy::firstPlay()
                 maxPair = seqPairArray[i];
             }
         }
+        qDebug()<<"firstPlay end------------------------- startegy firstPlay 121";
         return maxPair;
     }
 
@@ -133,6 +146,7 @@ Cards Strategy::firstPlay()
         {
             Cards tmp = planeArray[0];
             tmp.add(pairArray);
+            qDebug()<<"firstPlay end------------------------- startegy firstPlay 146";
             return tmp;
         }
         // 2. 飞机带两个单牌
@@ -160,12 +174,14 @@ Cards Strategy::firstPlay()
             {
                 Cards tmp = planeArray[0];
                 tmp.add(singleArray);
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 173";
                 return tmp;
             }
             else
             {
                 //没有单张也没有对子可带直接出飞机
                 // 3. 飞机
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 179";
                 return planeArray[0];
             }
         }
@@ -184,6 +200,7 @@ Cards Strategy::firstPlay()
                     Cards single = Strategy(m_player, backup).findSamePointCards(point, 1);
                     Cards tmp = seqTripleArray[0];
                     tmp.add(single);
+                    qDebug()<<"firstPlay end------------------------- startegy firstPlay 197";
                     return tmp;
                 }
                 else if(pointCount == 2)
@@ -191,11 +208,13 @@ Cards Strategy::firstPlay()
                     Cards pair = Strategy(m_player, backup).findSamePointCards(point, 2);
                     Cards tmp = seqTripleArray[0];
                     tmp.add(pair);
+                    qDebug()<<"firstPlay end------------------------- startegy firstPlay 204";
                     return tmp;
                 }
             }
         }
         // 不带副牌
+        qDebug()<<"firstPlay end------------------------- startegy firstPlay 209";
         return seqTripleArray[0];
     }
     // 只能单牌或者对儿牌
@@ -209,11 +228,13 @@ Cards Strategy::firstPlay()
             int pointCount = backup.getCardCount(point);
             if(pointCount == 1)
             {
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 222";
                 Cards single = Strategy(m_player, backup).findSamePointCards(point, 1);
                 return single;
             }
             else if(pointCount == 2)
             {
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 228";
                 Cards pair = Strategy(m_player, backup).findSamePointCards(point, 2);
                 return pair;
             }
@@ -228,16 +249,19 @@ Cards Strategy::firstPlay()
             int pointCount = backup.getCardCount(point);
             if(pointCount == 1)
             {
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 243";
                 Cards single = Strategy(m_player, backup).findSamePointCards(point, 1);
                 return single;
             }
             else if(pointCount == 2)
             {
                 Cards pair = Strategy(m_player, backup).findSamePointCards(point, 2);
+                qDebug()<<"firstPlay end------------------------- startegy firstPlay 247 单张";
                 return pair;
             }
         }
     }
+    qDebug()<<"firstPlay end------------------------- startegy firstPlay 251";
     return Cards();
 }
 

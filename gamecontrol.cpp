@@ -1,5 +1,6 @@
 #include "gamecontrol.h"
 #include <QDebug>
+#include "playhand.h"
 #include <QTimer>
 GameControl::GameControl(QObject *parent)
     : QObject{parent}
@@ -15,7 +16,7 @@ void GameControl::playerInint()
     //头像的显示方位
     leftRobot->setDirection(Player::left);
     rightRobot->setDirection(Player::right);
-    leftRobot->setDirection(Player::right);
+    userPlayer->setDirection(Player::right);
 
     //sex
     Player::Sex sex;
@@ -39,19 +40,19 @@ void GameControl::playerInint()
     currentPlayer = userPlayer;
    //处理玩家下注
     connect(userPlayer,&UserPlayer::notifyGrabLordBet,this,&GameControl::onGrabBet);
-    connect(leftRobot, &UserPlayer::notifyGrabLordBet, this, &GameControl::onGrabBet);
-    connect(rightRobot, &UserPlayer::notifyGrabLordBet, this, &GameControl::onGrabBet);
+    connect(leftRobot, &Robot::notifyGrabLordBet, this, &GameControl::onGrabBet);
+    connect(rightRobot, &Robot::notifyGrabLordBet, this, &GameControl::onGrabBet);
 
-//    // 传递出牌玩家对象和玩家打出的牌
+    // 传递出牌玩家对象和玩家打出的牌
 
-//    connect(this, &GameControl::pendingInfo, leftRobot, &Robot::storePendingInfo);
-//    connect(this, &GameControl::pendingInfo, rightRobot, &Robot::storePendingInfo);
-//    connect(this, &GameControl::pendingInfo, userPlayer, &Robot::storePendingInfo);
+    connect(this, &GameControl::pendingInfo, leftRobot, &Robot::storeSendCardsInfor);
+    connect(this, &GameControl::pendingInfo, rightRobot, &Robot::storeSendCardsInfor);
+    connect(this, &GameControl::pendingInfo, userPlayer, &Robot::storeSendCardsInfor);
 
-//    // 处理玩家出牌
-//    connect(leftRobot, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
-//    connect(rightRobot, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
-//    connect(userPlayer, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
+    // 处理玩家出牌
+    connect(leftRobot, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
+    connect(rightRobot, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
+    connect(userPlayer, &Robot::notifyPlayHand, this, &GameControl::onPlayHand);
 
 }
 
@@ -85,6 +86,10 @@ Cards GameControl::getSendHandCards()
     return sendHandPlayerCards;
 }
 
+Player *GameControl::getPendPlayer()
+{
+    return sendHandPlayer;
+}
 Card GameControl::takeOneCard()
 {
     return allCards.randSendCard();
@@ -124,7 +129,7 @@ void GameControl::resetCardDate()
 
 void GameControl::statrCallLord()
 {
-    //开始准备叫地主
+    //开始准备叫地主 会调用3个类的槽函数 线程就是在这个函数里面创建
     currentPlayer->prepareCallLord();
     emit playerStatusChanged(currentPlayer,thinkCallLords);
 }
@@ -136,7 +141,9 @@ void GameControl::becomeLord(Player*player,int&bet)
     currentPlayer->getPrePlayer()->setRole(Player::farmer);
     currentPlayer = player;
     //地主获得3张底牌
+    qDebug()<<"MAx Point"<<allCards.getMaxPoint();
     currentPlayer->storeCards(allCards);
+
     //准备发牌
     QTimer::singleShot(1000, this, [=]()
                        {
@@ -165,15 +172,16 @@ int GameControl::getPlayerMaxBet()
 
 void GameControl::onGrabBet(Player *player, int bet)
 {
-    // 1. 通知主界面玩家叫地主了(更新信息提示)
+    // 1. 通知主界面玩家叫地主了(更新信息提示动画)
     //bet==0不抢
     if(bet == 0 || m_betRecord.bet >= bet)
     {
+        //调用的是gamecontrl中的notifyGrabLordBet 在gamepanel类中的initbuttons中connect
         emit notifyGrabLordBet(player, 0, false);
     }
     else if(bet > 0 && m_betRecord.bet == 0)
     {
-        // 标记是第一个抢地主的玩家更新提示显示叫地主
+        // 标记是第一个抢地主的玩家更新提示动画显示叫地主
         emit notifyGrabLordBet(player, bet, true);
     }
     else
@@ -213,6 +221,7 @@ void GameControl::onGrabBet(Player *player, int bet)
         }
         else
         {
+            //让人数最大的人成为地主
             becomeLord(m_betRecord.player, m_betRecord.bet);
         }
         m_betRecord.reset();
@@ -225,62 +234,79 @@ void GameControl::onGrabBet(Player *player, int bet)
     currentPlayer->prepareCallLord();
 }
 
-//void GameControl::onPlayHand(Player *player, const Cards &card)
-//{
-//    // 1. 将玩家出牌的信号转发给主界面
-//    emit notifyPlayHand(player, card);
-//    // 2. 如果不是空牌, 给其他玩家发送信号, 保存出牌玩家对象和打出的牌
-//    if(!card.isEmpty())
-//    {
-//        m_pendCards = card;
-//        m_pendPlayer = player;
-//        emit pendingInfo(player, card);
-//    }
-//    // 如果有炸弹, 低分翻倍
-//    Cards myCards = const_cast<Cards&>(card);
-//    PlayHand::HandType type = PlayHand(myCards).getHandType();
-//    if(type == PlayHand::Hand_Bomb || type == PlayHand::Hand_Bomb_Jokers)
-//    {
-//        m_curBet = m_curBet * 2;
-//    }
+void GameControl::onPlayHand(Player *player, const Cards &card)
+{
+    //相关信号初始化在void GameControl::playerInint()
 
-//    // 3. 如果玩家的牌出完了, 计算本局游戏的总分
-//    if(player->getCards().isEmpty())
-//    {
-//        Player* prev = player->getPrevPlayer();
-//        Player* next = player->getNextPlayer();
-//        if(player->getRole() == Player::Lord)
-//        {
-//            player->setScore(player->getScore() + 2 * m_curBet);
-//            prev->setScore(prev->getScore() - m_curBet);
-//            next->setScore(next->getScore() - m_curBet);
-//            player->setWin(true);
-//            prev->setWin(false);
-//            next->setWin(false);
-//        }
-//        else
-//        {
-//            player->setWin(true);
-//            player->setScore(player->getScore() + m_curBet);
-//            if(prev->getRole() == Player::Lord)
-//            {
-//                prev->setScore(prev->getScore() - 2 * m_curBet);
-//                next->setScore(next->getScore() + m_curBet);
-//                prev->setWin(false);
-//                next->setWin(true);
-//            }
-//            else
-//            {
-//                next->setScore(next->getScore() - 2 * m_curBet);
-//                prev->setScore(prev->getScore() + m_curBet);
-//                next->setWin(false);
-//                prev->setWin(true);
-//            }
-//        }
-//        emit playerStatusChanged(player, GameControl::Winning);
-//        return;
+    // 1. 将玩家出牌的信号转发给主界面
+    emit notifyPlayHand(player, card);
+    // 2. 如果不是空牌, 给其他玩家发送信号, 保存出牌玩家对象和打出的牌
+    if(!card.isEmpty())
+    {
+        qDebug()<<"出牌玩家不为空 ----------GameControl::onPlayHand--246";
+        //保存出的牌 和出牌玩家
+        sendHandPlayerCards = card;
+        sendHandPlayer = player;
+        //通知其他玩家 保存出牌玩家信息
+        emit pendingInfo(player, card);
+    }
+    // 如果有炸弹, 低分翻倍
+    Cards myCards = const_cast<Cards&>(card);
+    PlayHand::HandType type = PlayHand(myCards).getHandType();
+    if(type == PlayHand::Hand_Bomb || type == PlayHand::Hand_Bomb_Jokers)
+    {
+        m_curBet = m_curBet * 2;
+    }
 
-//}
+    // 3. 如果玩家的牌出完了, 计算本局游戏的总分
+    if(player->getCards().isEmpty())
+    {
+        Player* prev = player->getPrePlayer();
+        Player* next = player->getNextPlayer();
+        //如果当前玩家是地主
+        if(player->getRole() == Player::lord)
+        {
+            player->setScore(player->getScore() + 2 * m_curBet);
+            prev->setScore(prev->getScore() - m_curBet);
+            next->setScore(next->getScore() - m_curBet);
+            player->setWin(true);
+            prev->setWin(false);
+            next->setWin(false);
+        }
+        else
+        {
+            player->setWin(true);
+            player->setScore(player->getScore() + m_curBet);
+            if(prev->getRole() == Player::lord)
+            {
+                prev->setScore(prev->getScore() - 2 * m_curBet);
+                next->setScore(next->getScore() + m_curBet);
+                prev->setWin(false);
+                next->setWin(true);
+            }
+            else
+            {
+                next->setScore(next->getScore() - 2 * m_curBet);
+                prev->setScore(prev->getScore() + m_curBet);
+                next->setWin(false);
+                prev->setWin(true);
+            }
+
+        }
+        //void GamePanel::gameControlInit()
+        emit playerStatusChanged(player, GameControl::win);
+        return;
+    }
+    // 4. 牌没有出完, 切换下一个玩家继续出牌
+    qDebug()<<"currentplayer :"<<currentPlayer->getName();
+    currentPlayer = player->getNextPlayer();
+    qDebug()<<"currentplayer :"<<currentPlayer->getName();
+    currentPlayer->prepareSendCards();
+    //发送改变玩家状态为考虑出牌状态 的信号
+    emit playerStatusChanged(currentPlayer, GameControl::thinkHandSendCard);
+}
+
+
 
 void GameControl::cropImage(QPixmap &pix, CardPanel*panel,int x, int y, Card &c)
 {

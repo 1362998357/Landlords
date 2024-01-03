@@ -2,7 +2,6 @@
 #define BUTTONGROUP_H
 
 #include <QWidget>
-#include "startbutton.h"
 /*
 开始游戏后下方显示的按钮组
 */

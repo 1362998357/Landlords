@@ -15,6 +15,10 @@ public:
     virtual void prepareCallLord() override;
     //准备出牌
     virtual void prepareSendCards() override;
+    //考虑叫地主
+    virtual void thinkCallLords() override;
+    //考虑出牌
+    virtual void thinkPlayHand() override;
 };
 
 #endif // ROBOT_H
