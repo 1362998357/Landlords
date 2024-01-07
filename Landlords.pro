@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,13 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     animationwindow.cpp \
+    bgmcontrol.cpp \
     buttongroup.cpp \
     card.cpp \
     cardpanel.cpp \
     cards.cpp \
     client.cpp \
+    countdown.cpp \
+    endingpanel.cpp \
     gamecontrol.cpp \
     gamepanel.cpp \
+    loading.cpp \
     player.cpp \
     playhand.cpp \
     robot.cpp \
@@ -29,12 +33,16 @@ SOURCES += \
 
 HEADERS += \
     animationwindow.h \
+    bgmcontrol.h \
     buttongroup.h \
     card.h \
     cardpanel.h \
     cards.h \
+    countdown.h \
+    endingpanel.h \
     gamecontrol.h \
     gamepanel.h \
+    loading.h \
     player.h \
     playhand.h \
     robot.h \

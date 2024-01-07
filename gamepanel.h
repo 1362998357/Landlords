@@ -8,6 +8,8 @@
 #include <QTimer>
 #include "cardpanel.h"
 #include "gamecontrol.h"
+#include "bgmcontrol.h"
+#include "countdown.h"
 /*
  * 游戏面板类将游戏面板中的各种组件显示出来
 */
@@ -36,8 +38,6 @@ public:
     void gameStatusPrecess(GameControl::GameStatus status);
     // 初始化游戏按钮组
     void initButtonsGroup();
-    //倒计时窗口初始化
-    void initTimeEndCount();
     void onCardSelected(Qt::MouseButton button);   // 处理玩家选牌槽函数
     // 处理用户玩家出牌
     void onUserPass();
@@ -65,6 +65,10 @@ public:
     void hidePlayerDropCards(Player* player);
     //加载玩家头像 转换成pixmap的形式
     QPixmap loadRoleImage(Player::Sex sex, Player::Derict direct, Player::Role role);
+    // 显示玩家的最终得分
+    void showEndingScorePanel();
+    // 初始化闹钟倒计时
+    void initCountDown();
 protected:
     void paintEvent(QPaintEvent* ev);
     void mouseMoveEvent(QMouseEvent* ev);
@@ -122,5 +126,7 @@ private:
     //保存被选中的卡片
     CardPanel* m_curSelCard;
     QSet<CardPanel*> m_selectCards;
+    CountDown* m_countDown;
+    BGMControl* m_bgm;
 };
 #endif // GAMEPANEL_H

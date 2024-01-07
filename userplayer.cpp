@@ -15,5 +15,5 @@ void UserPlayer::prepareCallLord()
 
 void UserPlayer::prepareSendCards()
 {
-
+    emit startCountDown();
 }

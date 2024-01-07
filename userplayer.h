@@ -15,6 +15,8 @@ public:
     virtual void prepareCallLord() override;
     //准备出牌
     virtual void prepareSendCards() override;
+signals:
+    void startCountDown(); //玩家出牌计时信号
 };
 
 #endif // USERPLAYER_H

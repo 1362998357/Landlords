@@ -136,9 +136,13 @@ void GameControl::statrCallLord()
 
 void GameControl::becomeLord(Player*player,int&bet)
 {
-    currentPlayer->setRole(Player::lord);
-    currentPlayer->getNextPlayer()->setRole(Player::farmer);
-    currentPlayer->getPrePlayer()->setRole(Player::farmer);
+    //设置成为的地主的分数为底分
+    m_curBet = bet;
+    //给抢的地主玩家更新信息
+    player->setRole(Player::lord);
+    player->getNextPlayer()->setRole(Player::farmer);
+    player->getPrePlayer()->setRole(Player::farmer);
+    //设置当前地主玩家为出牌玩家
     currentPlayer = player;
     //地主获得3张底牌
     qDebug()<<"MAx Point"<<allCards.getMaxPoint();
@@ -261,6 +265,7 @@ void GameControl::onPlayHand(Player *player, const Cards &card)
     // 3. 如果玩家的牌出完了, 计算本局游戏的总分
     if(player->getCards().isEmpty())
     {
+        qDebug()<<"玩家当前的分数----------"<<m_curBet;
         Player* prev = player->getPrePlayer();
         Player* next = player->getNextPlayer();
         //如果当前玩家是地主
@@ -294,6 +299,7 @@ void GameControl::onPlayHand(Player *player, const Cards &card)
 
         }
         //void GamePanel::gameControlInit()
+        qDebug()<<"玩家状态改变win--------------onplayerHand--gamecontrol-297";
         emit playerStatusChanged(player, GameControl::win);
         return;
     }

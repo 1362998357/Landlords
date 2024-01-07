@@ -114,5 +114,6 @@ void AnimationWindow::paintEvent(QPaintEvent *ev)
 {
     Q_UNUSED(ev)
     QPainter p(this);
+    //炸弹是00但飞机的x的坐标是不断变化的
     p.drawPixmap(m_x, 0, m_image.width(), m_image.height(), m_image);
 }
